@@ -106,3 +106,7 @@ This module, just like Binary, does not contains code optimization and compilati
 
 ### Runtime
 This module is for running code, including optimizing code, compiling the code from Binary into different code (but more efficient) and run that code. Type validation must be performed during runtime.
+
+## Copyright and License
+(c) MangoPlex and MangoScript contributors 2024. Licensed under MIT license.
+_TODO_ include license headers
