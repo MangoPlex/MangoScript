@@ -1,0 +1,17 @@
+# Eclipse Platform
+/.settings/
+/mangoscript-*/.settings/
+
+# Eclipse ECJ (Eclipse IDE + VSCode)
+# .project will be handled by Maven plugin
+/.classpath
+/.project
+/mangoscript-*/.classpath
+/mangoscript-*/.project
+
+# Intellij
+# TODO ask JustMango maybe?
+
+# Maven
+/target/
+/mangoscript-*/target/
