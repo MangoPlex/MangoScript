@@ -64,6 +64,9 @@ class ModuleParserTest {
 				label003: for(;;) break label003;
 
 				print(0x7F | 0x80 == 0b11111111);
+
+				i8[] bytes = i8[]();
+				bytes[0] = bytes[1] = 15b;
 			}
 
 			class vec3 extends vec2 {

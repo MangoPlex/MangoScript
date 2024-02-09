@@ -11,10 +11,15 @@ import xyz.mangostudio.mangoscript.binary.expr.OperatorExpression;
 import xyz.mangostudio.mangoscript.binary.expr.PropertyGetExpression;
 import xyz.mangostudio.mangoscript.binary.expr.PropertySetExpression;
 import xyz.mangostudio.mangoscript.binary.expr.PropertyUnaryModifyExpression;
+import xyz.mangostudio.mangoscript.binary.expr.SubscriptExpression;
+import xyz.mangostudio.mangoscript.binary.expr.SubscriptSetExpression;
 import xyz.mangostudio.mangoscript.binary.expr.ThisExpression;
 import xyz.mangostudio.mangoscript.binary.expr.Unary;
 import xyz.mangostudio.mangoscript.binary.expr.UnaryExpression;
 import xyz.mangostudio.mangoscript.binary.expr.literal.LiteralStringExpression;
+import xyz.mangostudio.mangoscript.binary.expr.type.ArrayTypeExpression;
+import xyz.mangostudio.mangoscript.binary.expr.type.OptionalTypeExpression;
+import xyz.mangostudio.mangoscript.binary.type.Type;
 import xyz.mangostudio.mangoscript.text.lexer.stream.token.TokenStream;
 import xyz.mangostudio.mangoscript.text.lexer.token.Keyword;
 import xyz.mangostudio.mangoscript.text.lexer.token.LiteralFloat;
@@ -72,6 +77,13 @@ public class ExpressionChainParser implements Parser {
 			return LocalExpression.LOCAL.getProperty(symbol.name());
 		}
 
+		Expression ret;
+		if ((ret = parsePrefixUnary(allParsers, tokens)) != null) return ret;
+		if ((ret = parsePrimitiveType(allParsers, tokens)) != null) return ret;
+		return null;
+	}
+
+	private Expression parsePrefixUnary(Parser allParsers, TokenStream tokens) {
 		Unary u;
 		if (tokens.getAhead() instanceof SymbolicKeyword symbolic && (u = symbolicPrefixToUnary(symbolic)) != null) {
 			tokens.skipToken();
@@ -101,6 +113,16 @@ public class ExpressionChainParser implements Parser {
 		case DECREMENT -> Unary.SUBTRACT_BEFORE;
 		default -> null;
 		};
+	}
+
+	private Expression parsePrimitiveType(Parser allParsers, TokenStream tokens) {
+		Type type;
+		if (tokens.getAhead() instanceof Keyword keyword && (type = TypeParser.keywordToType(keyword)) != null) {
+			tokens.skipToken();
+			return LocalExpression.LOCAL.getProperty(type.toString());
+		}
+
+		return null;
 	}
 
 	@Override
@@ -149,6 +171,14 @@ public class ExpressionChainParser implements Parser {
 					continue;
 				}
 
+				if (lastOf(exprs) instanceof SubscriptExpression subscript) {
+					tokens.skipToken();
+					Expression expr = allParsers.parseExpression(tokens);
+					if (expr == null) throw new ParserException("Expected expression, but found " + tokens.getAhead());
+					setLast(exprs, new SubscriptSetExpression(subscript.target(), subscript.args(), expr));
+					continue;
+				}
+
 				throw new ParserException("Setter is unexpected for " + lastOf(exprs));
 			}
 
@@ -191,6 +221,41 @@ public class ExpressionChainParser implements Parser {
 
 				tokens.skipToken();
 				setLast(exprs, lastOf(exprs).call(args.toArray(Expression[]::new)));
+				continue;
+			}
+
+			// Subscript access
+			if (token == SymbolicKeyword.OPEN_SQUARE_BRACKET) {
+				tokens.skipToken();
+
+				List<Expression> args = new ArrayList<>();
+				while (tokens.getAhead() != SymbolicKeyword.CLOSE_SQUARE_BRACKET) {
+					Expression arg = allParsers.parseExpression(tokens);
+					if (arg == null) throw new ParserException("Expected expression, but found " + tokens.getAhead());
+					args.add(arg);
+
+					if (tokens.getAhead() == SymbolicKeyword.CLOSE_SQUARE_BRACKET) break;
+					if ((token = tokens.getAhead()) != SymbolicKeyword.COMMA)
+						throw new ParserException("Expected ',' or ']', but " + token + " found");
+					tokens.skipToken();
+				}
+
+				tokens.skipToken();
+				setLast(exprs, lastOf(exprs).subscript(args.toArray(Expression[]::new)));
+				continue;
+			}
+
+			// Array variant
+			if (token == SymbolicKeyword.ARRAY) {
+				tokens.skipToken();
+				setLast(exprs, new ArrayTypeExpression(lastOf(exprs)));
+				continue;
+			}
+
+			// Optional variant
+			if (token == SymbolicKeyword.QUESTION_MARK) {
+				tokens.skipToken();
+				setLast(exprs, new OptionalTypeExpression(lastOf(exprs)));
 				continue;
 			}
 

@@ -9,6 +9,10 @@ public interface Expression {
 		return new InvokeExpression(this, args);
 	}
 
+	default SubscriptExpression subscript(Expression... args) {
+		return new SubscriptExpression(this, args);
+	}
+
 	default PropertyGetExpression getProperty(String name) {
 		return new PropertyGetExpression(this, name);
 	}

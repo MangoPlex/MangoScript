@@ -5,6 +5,10 @@ public record PropertyGetExpression(Expression target, String name) implements E
 		return new PropertySetExpression(target, name, expression);
 	}
 
+	public boolean canBeUsedAsType() {
+		return target == LocalExpression.LOCAL;
+	}
+
 	@Override
 	public String toString() {
 		if (target == LocalExpression.LOCAL) return name;

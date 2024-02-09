@@ -8,7 +8,8 @@ public enum PrimitiveType implements Type {
 	F32,
 	F64,
 	ANY,
-	VOID;
+	VOID,
+	TYPE;
 
 	@Override
 	public String toString() {

@@ -51,17 +51,7 @@ public class TypeParser {
 	public static Type parseBaseType(TokenStream tokens) {
 		if (tokens.getAhead() instanceof Keyword keyword) {
 			tokens.skipToken();
-			return switch (keyword) {
-			case I8 -> PrimitiveType.I8;
-			case I16 -> PrimitiveType.I16;
-			case I32 -> PrimitiveType.I32;
-			case I64 -> PrimitiveType.I64;
-			case F32 -> PrimitiveType.F32;
-			case F64 -> PrimitiveType.F64;
-			case ANY -> PrimitiveType.ANY;
-			case VOID -> PrimitiveType.VOID;
-			default -> null;
-			};
+			return keywordToType(keyword);
 		}
 
 		if (tokens.getAhead() instanceof Symbol typeName) {
@@ -70,5 +60,20 @@ public class TypeParser {
 		}
 
 		return null;
+	}
+
+	public static Type keywordToType(Keyword keyword) {
+		return switch (keyword) {
+		case I8 -> PrimitiveType.I8;
+		case I16 -> PrimitiveType.I16;
+		case I32 -> PrimitiveType.I32;
+		case I64 -> PrimitiveType.I64;
+		case F32 -> PrimitiveType.F32;
+		case F64 -> PrimitiveType.F64;
+		case ANY -> PrimitiveType.ANY;
+		case TYPE -> PrimitiveType.TYPE;
+		case VOID -> PrimitiveType.VOID;
+		default -> null;
+		};
 	}
 }
