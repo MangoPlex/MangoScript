@@ -7,7 +7,14 @@ import xyz.mangostudio.mangoscript.binary.type.Type;
 import xyz.mangostudio.mangoscript.runtime.type.RuntimeTypes;
 import xyz.mangostudio.mangoscript.runtime.value.OptionalValue;
 import xyz.mangostudio.mangoscript.runtime.value.Value;
+import xyz.mangostudio.mangoscript.runtime.value.object.ObjectValue;
 
+/**
+ * <p>
+ * Auto cast follows the auto casting rule defined in <cite>MangoScript Runtime
+ * Specification</cite>.
+ * </p>
+ */
 public class AutoCast {
 	public static Value toPrimitive(PrimitiveType destType, Value source) {
 		if (destType == PrimitiveType.VOID) {
@@ -38,6 +45,17 @@ public class AutoCast {
 		};
 	}
 
+	/**
+	 * <p>
+	 * Apply auto-casting rule on source value. This method throws if explict
+	 * casting is required.
+	 * </p>
+	 * 
+	 * @param destType The target type that you want.
+	 * @param source   The source value to cast.
+	 * @return Value with casted type. If the value is {@link ObjectValue}, the
+	 *         runtime type could be different.
+	 */
 	public static Value to(Type destType, Value source) {
 		destType = RuntimeTypes.toPrimitivesIfPossible(destType);
 		Type sourceType = RuntimeTypes.toPrimitivesIfPossible(source.getType());
@@ -60,6 +78,17 @@ public class AutoCast {
 			+ ", explict casting required");
 	}
 
+	/**
+	 * <p>
+	 * Cast an array of function inputs into another array of function inputs, but
+	 * with its type casted to correct type specified in
+	 * {@link FunctionSignature#parameters()}.
+	 * </p>
+	 * 
+	 * @param signature The function signature.
+	 * @param args      An array of function inputs.
+	 * @return A new array of function inputs.
+	 */
 	public static Value[] castToFunctionSignature(FunctionSignature signature, Value... args) {
 		if (args.length > signature.parameters().length)
 			throw new RuntimeException("Number of inputs exceeds function signature's parameters count: "

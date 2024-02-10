@@ -26,6 +26,28 @@ import xyz.mangostudio.mangoscript.runtime.type.GuestClassRuntimeType;
 import xyz.mangostudio.mangoscript.runtime.value.TypeValue;
 import xyz.mangostudio.mangoscript.runtime.value.Value;
 
+/**
+ * <p>
+ * A context for module. All modules should imports the factory module,
+ * {@link FactoryModuleContext#FACTORY}, so that system types like
+ * {@code object}, {@code string} and integer classes are included on every
+ * single module. This can be done by creating a new module with
+ * {@link #create()}.
+ * </p>
+ * <p>
+ * Loading a module from {@link MangoScriptModule} can be done by using
+ * {@link #load(MangoScriptModule, ModuleResolver)}. Note that if the module
+ * template contains imports, {@link ModuleResolver} must be provided, otherwise
+ * it can be left as {@code null}.
+ * </p>
+ * <p>
+ * In MangoScript, a module can have classes, functions and its "value"
+ * counterparts (stored as module constants), as well as exported values.
+ * Methods like {@link #getFunctions()} and {@link #getClasses()} are there for
+ * convenience purpose, but the main part that MangoScript Runtime mostly relies
+ * on is {@link #getConstants()}, which are constants defined at module level.
+ * </p>
+ */
 public interface ModuleContext {
 	public Map<String, ClassRuntimeType> getClasses();
 
