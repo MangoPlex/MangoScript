@@ -325,6 +325,9 @@ public class ExpressionChainParser implements Parser {
 		case LESS_THAN_OR_EQUALS -> Operator.LESS_THAN_OR_EQUALS;
 		case GREATER_THAN_OR_EQUALS -> Operator.GREATER_THAN_OR_EQUALS;
 		case EQUALS -> Operator.EQUALS;
+		case SHIFT_LEFT -> Operator.SHIFT_LEFT;
+		case SHIFT_RIGHT -> Operator.SHIFT_RIGHT;
+		case EMPTY_COALESCING -> Operator.EMPTY_COALESCING;
 		default -> null;
 		};
 	}

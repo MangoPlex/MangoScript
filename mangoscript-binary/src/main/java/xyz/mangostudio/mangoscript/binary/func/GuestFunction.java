@@ -17,6 +17,7 @@ public class GuestFunction implements Function {
 		this.signature = signature;
 		this.argNames = argNames;
 		this.code = code;
+		for (int i = 0; i < argNames.length; i++) argumentsMapping.put(argNames[i], i);
 	}
 
 	@Override

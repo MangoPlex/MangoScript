@@ -17,7 +17,7 @@ public class MangoScriptModule {
 	private List<String> imports = new ArrayList<>();
 	private Set<String> definedSymbols = new HashSet<>();
 	private Map<String, String> exports = new HashMap<>();
-	private Map<String, ObjectClass> classes = new HashMap<>();
+	private List<ObjectClass> classes = new ArrayList<>();
 	private Map<String, Function> functions = new HashMap<>();
 	// TODO private Map<String, Expression> constants = new HashMap<>();
 
@@ -33,7 +33,12 @@ public class MangoScriptModule {
 	 */
 	public Map<String, String> getExports() { return Collections.unmodifiableMap(exports); }
 
-	public Map<String, ObjectClass> getClasses() { return Collections.unmodifiableMap(classes); }
+	public List<ObjectClass> getClasses() { return Collections.unmodifiableList(classes); }
+
+	public ObjectClass getClass(String name) {
+		for (ObjectClass clazz : getClasses()) if (name.equals(clazz.getName())) return clazz;
+		return null;
+	}
 
 	public Map<String, Function> getFunctions() { return Collections.unmodifiableMap(functions); }
 
@@ -54,7 +59,7 @@ public class MangoScriptModule {
 
 	public MangoScriptModule withClass(String name, ObjectClass clazz) {
 		if (definedSymbols.contains(name)) throw new ModuleException("'" + name + "' is already defined");
-		classes.put(name, clazz);
+		classes.add(clazz);
 		definedSymbols.add(name);
 		return this;
 	}
@@ -70,7 +75,7 @@ public class MangoScriptModule {
 	public String toString() {
 		String content = ""
 			+ imports.stream().map(v -> "    import \"" + v + "\";\n").collect(Collectors.joining(""))
-			+ classes.keySet().stream().map(v -> "    class " + v + ";\n").collect(Collectors.joining(""))
+			+ classes.stream().map(v -> "    class " + v + ";\n").collect(Collectors.joining(""))
 			+ functions.entrySet().stream()
 				.flatMap(e -> Stream.of(e.getValue().toString().split("\n")))
 				.map(e -> "    " + e + "\n")

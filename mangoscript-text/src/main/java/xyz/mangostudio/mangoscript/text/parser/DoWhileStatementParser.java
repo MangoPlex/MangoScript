@@ -1,8 +1,8 @@
 package xyz.mangostudio.mangoscript.text.parser;
 
 import xyz.mangostudio.mangoscript.binary.expr.Expression;
-import xyz.mangostudio.mangoscript.binary.stmt.DoWhileStatement;
 import xyz.mangostudio.mangoscript.binary.stmt.Statement;
+import xyz.mangostudio.mangoscript.binary.stmt.looping.DoWhileStatement;
 import xyz.mangostudio.mangoscript.text.lexer.stream.token.TokenStream;
 import xyz.mangostudio.mangoscript.text.lexer.token.Keyword;
 import xyz.mangostudio.mangoscript.text.lexer.token.SymbolicKeyword;

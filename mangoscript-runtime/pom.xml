@@ -25,5 +25,11 @@
 			<artifactId>mangoscript-binary</artifactId>
 			<version>${mangoscript-version}</version>
 		</dependency>
+		<dependency>
+			<groupId>xyz.mangostudio</groupId>
+			<artifactId>mangoscript-text</artifactId>
+			<version>${mangoscript-version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>

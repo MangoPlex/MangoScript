@@ -6,11 +6,10 @@ public class Parsers {
 		ScopeStatementParser.PARSER,
 		ReturnStatementParser.PARSER,
 		ConditionalStatementParser.PARSER,
-		LabeledLoopingStatementParser.PARSER,
 		WhileStatementParser.PARSER,
 		DoWhileStatementParser.PARSER,
 		ForStatementParser.PARSER,
-		BreakStatementParser.PARSER,
+		LoopControlStatementParser.PARSER,
 		DefineStatementParser.PARSER,
 		EvaluateStatementParser.PARSER,
 

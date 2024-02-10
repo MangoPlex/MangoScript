@@ -53,20 +53,17 @@ class ModuleParserTest {
 				-1;
 
 				while (true) break;
-				label0001: while (true) break label0001;
 				do break; while (true);
-				label0002: do break label0002; while (true);
 				for (;;) break;
 				for (i32 i = 0; i < 10; i++) {
-					break;
+					continue;
 				}
 				for (vec2 v = vec2(0, 10); v.x < v.y; v.x++) print(v);
-				label003: for(;;) break label003;
 
 				print(0x7F | 0x80 == 0b11111111);
 
 				i8[] bytes = i8[]();
-				bytes[0] = bytes[1] = 15b;
+				bytes[0] = bytes[1] = 15b << 1b;
 			}
 
 			class vec3 extends vec2 {
@@ -88,8 +85,8 @@ class ModuleParserTest {
 		assertEquals("path/to/module.ms", module.getImports().get(0));
 		assertNotNull(module.getFunctions().get("main"));
 		assertNotNull(module.getFunctions().get("castTest"));
-		assertNotNull(module.getClasses().get("vec2"));
-		assertNotNull(module.getClasses().get("vec3"));
+		assertNotNull(module.getClass("vec2"));
+		assertNotNull(module.getClass("vec3"));
 		assertEquals("vec2", module.getExports().get("vec2"));
 		assertEquals("vec3", module.getExports().get("vec3"));
 		assertEquals("main", module.getExports().get("entryPoint"));
